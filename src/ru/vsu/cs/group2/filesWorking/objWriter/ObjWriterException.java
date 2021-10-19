@@ -1,4 +1,4 @@
-package ru.vsu.cs.volchenko_s_a.filesWorking.objWriter;
+package ru.vsu.cs.group2.filesWorking.objWriter;
 
 class ObjWriterException extends RuntimeException {
     public ObjWriterException(String errorMessage, int lineInd) {

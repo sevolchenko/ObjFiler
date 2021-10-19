@@ -1,4 +1,4 @@
-package ru.vsu.cs.volchenko_s_a;
+package ru.vsu.cs.group2;
 
 public class Vector3f {
 

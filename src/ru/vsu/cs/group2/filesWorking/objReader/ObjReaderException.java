@@ -1,6 +1,6 @@
-package ru.vsu.cs.volchenko_s_a.filesWorking.objReader;
+package ru.vsu.cs.group2.filesWorking.objReader;
 
-class ObjReaderException extends RuntimeException {
+public class ObjReaderException extends RuntimeException {
     public ObjReaderException(String errorMessage, int lineInd) {
         super("Error parsing OBJ file on line: " + lineInd + ". " + errorMessage);
     }

@@ -1,8 +1,11 @@
-package ru.vsu.cs.volchenko_s_a.filesWorking.objReader;
-import ru.vsu.cs.volchenko_s_a.Model;
-import ru.vsu.cs.volchenko_s_a.Polygon;
-import ru.vsu.cs.volchenko_s_a.Vector2f;
-import ru.vsu.cs.volchenko_s_a.Vector3f;
+package ru.vsu.cs.group2.filesWorking.objReader;
+import ru.vsu.cs.group2.Model;
+import ru.vsu.cs.group2.Polygon;
+import ru.vsu.cs.group2.Vector2f;
+import ru.vsu.cs.group2.Vector3f;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import java.util.ArrayList;
@@ -10,11 +13,16 @@ import java.util.Arrays;
 
 public class ObjReader {
 
-    public static Model read(String fileContent) {
+    public static Model read(String filename) throws FileNotFoundException {
         Model result = new Model();
 
         int lineInd = 0;
-        Scanner scanner = new Scanner(fileContent);
+
+        if (!filename.toLowerCase().endsWith(".obj")) {
+            filename += ".obj";
+        }
+
+        Scanner scanner = new Scanner(new File(filename));
         while (scanner.hasNextLine()) {
             final String line = scanner.nextLine();
             ArrayList<String> wordsInLine = new ArrayList<String>(Arrays.asList(line.split("\\s+")));
@@ -37,25 +45,17 @@ public class ObjReader {
                 // А еще это портит читаемость
                 // И не стоит забывать про тесты. Чем проще вам задать данные для теста, проверить, что метод рабочий,
                 // тем лучше.
-                case Model.OBJ_VERTEX_TOKEN -> result.vertices.add(parseVertex(wordsInLine, lineInd));
-                case Model.OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
-                case Model.OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
-                // А здесь описанное выше правило нарушается, и это плохо. Например, очевидно, что тестировать такой
-                // метод сложнее.
-                // Подумайте и перепишите его так, чтобы с ним было легче работать.
-                case Model.OBJ_POLYGON_TOKEN -> parsePolygon(
-                        wordsInLine,
-                        result.polygonVertexIndices,
-                        result.polygonTextureVertexIndices,
-                        result.polygonNormalIndices,
-                        lineInd);
+                case Model.OBJ_VERTEX_TOKEN -> result.addVertices(parseVertex(wordsInLine, lineInd));
+                case Model.OBJ_TEXTURE_TOKEN -> result.addTextureVertices(parseTextureVertex(wordsInLine, lineInd));
+                case Model.OBJ_NORMAL_TOKEN -> result.addNormals(parseNormal(wordsInLine, lineInd));
+                case Model.OBJ_POLYGON_TOKEN -> result.addPolygon(parsePolygon(wordsInLine, lineInd));
                 default -> {}
             }
         }
         return result;
     }
     // Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
-    protected static Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+    public static Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
         try {
             return new Vector3f(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),
@@ -99,47 +99,30 @@ public class ObjReader {
         }
     }
 
-    protected static void parsePolygon(
-            final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-        Polygon polygon = new Polygon(onePolygonVertexIndices, onePolygonTextureVertexIndices, onePolygonNormalIndices);
-
+    public static Polygon parsePolygon(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+        Polygon polygon = new Polygon();
         for (String s : wordsInLineWithoutToken) {
-            parsePolygonWord(s, polygon);
+            parsePolygonWord(s, polygon, lineInd);
         }
-        polygon.polygonNormalVertexes.add(onePolygonIndices);
-        polygon.polygonTextureVertexes.add(onePolygonTextureVertexIndices);
-        polygon.polygonNormalVertexes.add(onePolygonNormalIndices);
-//        polygonVertexIndices.add(onePolygonVertexIndices);
-//        polygonTextureVertexIndices.add(onePolygonTextureVertexIndices);
-//        polygonNormalIndices.add(onePolygonNormalIndices);
+        return polygon;
     }
 
     // Обратите внимание, что для чтения полигонов я выделил еще один вспомогательный метод.
     // Это бывает очень полезно и с точки зрения структурирования алгоритма в голове, и с точки зрения тестирования.
     // В радикальных случаях не бойтесь выносить в отдельные методы и тестировать код из одной-двух строчек.
-    protected static void parsePolygonWord(
-            String wordInLine, Polygon polygon, int lineInd) {
+    protected static void parsePolygonWord(String wordInLine, Polygon polygon, int lineInd) {
         try {
             String[] wordIndices = wordInLine.split("/");
-            switch (wordIndices.length) {
-                case 1 -> {
-                    polygon.polygonVertexes.add(Integer.parseInt(wordIndices[0]) - 1);
-                }
-                case 2 -> {
-                    polygon.polygonVertexes.add(Integer.parseInt(wordIndices[0]) - 1);
-                    polygon.polygonTextureVertexes.add(Integer.parseInt(wordIndices[1]) - 1);
-                }
-                case 3 -> {
-                    polygon.polygonVertexes.add(Integer.parseInt(wordIndices[0]) - 1);
-                    polygon.polygonNormalVertexes.add(Integer.parseInt(wordIndices[2]) - 1);
-                    if (!wordIndices[1].equals("")) {
-                        polygon.polygonTextureVertexes.add(Integer.parseInt(wordIndices[1]) - 1);
-                    }
-                }
-                default -> {
-                    throw new ObjReaderException("Invalid element size.", lineInd);
+            int[] arrayIndices = new int[3];
+            for (int i = 0; i < arrayIndices.length; i++) {
+                if (i >= wordIndices.length || wordIndices[i].equals("")) {
+                    arrayIndices[i] = 0;
+                } else {
+                    arrayIndices[i] = Integer.parseInt(wordIndices[i]);
                 }
             }
+            polygon.addToPolygon(arrayIndices[0], arrayIndices[1], arrayIndices[2]);
+
 
         } catch(NumberFormatException e) {
             throw new ObjReaderException("Failed to parse int value.", lineInd);
@@ -148,8 +131,6 @@ public class ObjReader {
             throw new ObjReaderException("Too few arguments.", lineInd);
         }
     }
-
-
 
 
 }

@@ -1,6 +1,4 @@
-package ru.vsu.cs.volchenko_s_a;
-
-import java.util.Objects;
+package ru.vsu.cs.group2;
 
 public class Vector2f {
 

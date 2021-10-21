@@ -4,9 +4,7 @@ public interface Vector {
 
     Vector add(Vector v) throws MathException;
 
-    default Vector subtract(Vector v) throws MathException {
-        return add(v.multiply(-1));
-    }
+    Vector subtract(Vector v) throws MathException;
 
     Vector multiply(double a);
 
@@ -18,9 +16,8 @@ public interface Vector {
         return Math.sqrt(scalarMultiply(this));
     }
 
-    default Vector normalized() throws MathException {
-        return divide(length());
-    }
+    Vector normalized() throws MathException;
+
 
     double scalarMultiply(Vector v) throws MathException;
 

@@ -41,4 +41,10 @@ public class Vector2 implements Vector {
         Vector2 v2 = (Vector2) v;
         return x * v2.x + y * v2.y;
     }
+
+    @Override
+    public Vector2 normalized() throws MathException {
+        return divide(length());
+    }
+
 }

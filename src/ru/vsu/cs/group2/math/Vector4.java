@@ -44,4 +44,9 @@ public class Vector4 implements Vector {
         Vector4 v4 = (Vector4) v;
         return x * v4.x + y * v4.y + z * v4.z + w * v4.w;
     }
+
+    @Override
+    public Vector4 normalized() throws MathException {
+        return divide(length());
+    }
 }

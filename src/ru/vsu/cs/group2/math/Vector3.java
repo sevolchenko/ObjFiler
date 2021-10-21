@@ -46,4 +46,9 @@ public class Vector3 implements Vector {
         Vector3 v3 = (Vector3) v;
         return x * v3.x + y * v3.y + z * v3.z;
     }
+
+    @Override
+    public Vector3 normalized() throws MathException {
+        return divide(length());
+    }
 }

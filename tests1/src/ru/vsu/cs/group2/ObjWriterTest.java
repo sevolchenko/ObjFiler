@@ -12,16 +12,15 @@ public class ObjWriterTest {
 
     @Test
     public void checkModelTeapot() throws IOException {
-        Model model =  ObjReader.read("C:\\Users\\loide\\Downloads\\SimpleInitTests\\TeapotMaterials.obj");
-        ObjWriter.modelToFile(model, "C:\\Users\\loide\\Downloads\\ObjFiler\\jopa1.obj");
+        Model model =  ObjReader.read("C:\\Users\\loide\\Downloads\\ObjFiler\\files\\input\\TeapotMaterials.obj");
+        ObjWriter.modelToFile(model, "C:\\Users\\loide\\Downloads\\ObjFiler\\files\\output\\test1.obj");
     }
 
     @Test
     public void checkModelTorus() throws IOException {
 
         System.out.println(System.getProperty("user.dir"));
-        Model model =  ObjReader.read("C:\\Users\\loide\\Downloads\\SimpleInitTests\\Torus03.obj");
-
-        ObjWriter.modelToFile(model, "C:\\Users\\loide\\Downloads\\ObjFiler\\jopa2.obj");
+        Model model = ObjReader.read("C:\\Users\\loide\\Downloads\\ObjFiler\\files\\input\\Torus03.obj");
+        ObjWriter.modelToFile(model, "C:\\Users\\loide\\Downloads\\ObjFiler\\files\\output\\test2.obj");
     }
 }

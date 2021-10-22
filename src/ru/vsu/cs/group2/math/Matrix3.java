@@ -31,7 +31,7 @@ public class Matrix3 implements Matrix {
 
     @Override
     public Vector3 multiply(Vector v) throws MathException {
-        if (v.getClass() != getClass()) {
+        if (v.getClass() != Vector3.class) {
             throw new MathException("Wrong class.");
         }
         Vector3 v3 = (Vector3) v;
@@ -55,5 +55,31 @@ public class Matrix3 implements Matrix {
         return arr[0].x * new Matrix2(new Vector2(arr[1].y, arr[1].z), new Vector2(arr[2].y, arr[2].z)).determinant() -
                 arr[0].y * new Matrix2(new Vector2(arr[1].x, arr[1].z), new Vector2(arr[2].x, arr[2].z)).determinant() +
                 arr[0].z * new Matrix2(new Vector2(arr[1].x, arr[1].y), new Vector2(arr[2].x, arr[2].y)).determinant();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        boolean res = true;
+        Vector3[] arr = getArr();
+        Matrix3 m = (Matrix3) o;
+        Vector3[] mArr = m.getArr();
+        for (int i = 0; i < arr.length; i++) {
+            res = res && arr[i].equals(mArr[i]);
+        }
+        return res;
+    }
+
+    public static Matrix3 getZeros() {
+        return new Matrix3(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    }
+
+    public static Matrix3 getOnes() {
+        return new Matrix3(new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1));
     }
 }

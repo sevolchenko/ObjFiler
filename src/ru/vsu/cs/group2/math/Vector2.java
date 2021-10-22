@@ -1,5 +1,9 @@
 package ru.vsu.cs.group2.math;
 
+import ru.vsu.cs.group2.Vector2f;
+
+import java.util.Objects;
+
 public class Vector2 implements Vector {
 
     public double x, y;
@@ -47,4 +51,16 @@ public class Vector2 implements Vector {
         return divide(length());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        double eps = 1e-7f;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Vector2 v2 = (Vector2) o;
+        return Math.abs(x - v2.x) < eps && Math.abs(y - v2.y) < eps;
+    }
 }

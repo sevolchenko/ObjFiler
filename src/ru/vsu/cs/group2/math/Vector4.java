@@ -49,4 +49,17 @@ public class Vector4 implements Vector {
     public Vector4 normalized() throws MathException {
         return divide(length());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        double eps = 1e-7f;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Vector4 v4 = (Vector4) o;
+        return Math.abs(x - v4.x) < eps && Math.abs(y - v4.y) < eps && Math.abs(z - v4.z) < eps && Math.abs(w - v4.w) < eps;
+    }
 }

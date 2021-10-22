@@ -32,7 +32,7 @@ public class Matrix4 implements Matrix {
 
     @Override
     public Vector4 multiply(Vector v) throws MathException {
-        if (v.getClass() != getClass()) {
+        if (v.getClass() != Vector4.class) {
             throw new MathException("Wrong class.");
         }
         Vector4 v4 = (Vector4) v;
@@ -58,6 +58,34 @@ public class Matrix4 implements Matrix {
                 arr[0].y * new Matrix3(new Vector3(arr[1].x, arr[1].z, arr[1].w), new Vector3(arr[2].x, arr[2].z, arr[2].w), new Vector3(arr[3].x, arr[3].z, arr[3].w)).determinant() +
                 arr[0].z * new Matrix3(new Vector3(arr[1].x, arr[1].y, arr[1].w), new Vector3(arr[2].x, arr[2].y, arr[2].w), new Vector3(arr[3].x, arr[3].y, arr[3].w)).determinant() -
                 arr[0].w * new Matrix3(new Vector3(arr[1].x, arr[1].y, arr[1].z), new Vector3(arr[2].x, arr[2].y, arr[1].z), new Vector3(arr[3].x, arr[3].y, arr[3].z)).determinant();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        boolean res = true;
+        Vector4[] arr = getArr();
+        Matrix4 m = (Matrix4) o;
+        Vector4[] mArr = m.getArr();
+        for (int i = 0; i < arr.length; i++) {
+            res = res && arr[i].equals(mArr[i]);
+        }
+        return res;
+    }
+
+    public static Matrix4 getZeros() {
+        return new Matrix4(new Vector4(0, 0, 0, 0), new Vector4(0, 0, 0, 0),
+                new Vector4(0, 0, 0, 0), new Vector4(0, 0, 0, 0));
+    }
+
+    public static Matrix4 getOnes() {
+        return new Matrix4(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0),
+                new Vector4(0, 0, 1, 0), new Vector4(0, 0,0, 1));
     }
 
 }

@@ -31,7 +31,7 @@ public class Matrix2 implements Matrix {
 
     @Override
     public Vector2 multiply(Vector v) throws MathException {
-        if (v.getClass() != getClass()) {
+        if (v.getClass() != Vector2.class) {
             throw new MathException("Wrong class.");
         }
         Vector2 v2 = (Vector2) v;
@@ -51,5 +51,31 @@ public class Matrix2 implements Matrix {
     @Override
     public double determinant() {
         return arr[0].x * arr[1].y - arr[0].y * arr[1].x;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        boolean res = true;
+        Vector2[] arr = getArr();
+        Matrix2 m = (Matrix2) o;
+        Vector2[] mArr = m.getArr();
+        for (int i = 0; i < arr.length; i++) {
+            res = res && arr[i].equals(mArr[i]);
+        }
+        return res;
+    }
+
+    public static Matrix2 getZeros() {
+        return new Matrix2(new Vector2(0, 0), new Vector2(0, 0));
+    }
+
+    public static Matrix2 getOnes() {
+        return new Matrix2(new Vector2(1, 0), new Vector2(0, 1));
     }
 }

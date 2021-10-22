@@ -51,4 +51,17 @@ public class Vector3 implements Vector {
     public Vector3 normalized() throws MathException {
         return divide(length());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        double eps = 1e-7f;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Vector3 v3 = (Vector3) o;
+        return Math.abs(x - v3.x) < eps && Math.abs(y - v3.y) < eps && Math.abs(z - v3.z) < eps;
+    }
 }
